@@ -1,0 +1,49 @@
+{
+  "name": "metro-link-api",
+  "version": "1.0.0",
+  "description": "Backend system for Train Service Management with Node.js, Express, and MongoDB. Features include user management with JWT authentication, train scheduling, station management, wallet integration, and ticket purchasing. Ensures secure transactions, data validation, and robust error handling.",
+  "main": "server.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test jest --testTimeout=5000",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nasimhelal-cell/metro-link"
+  },
+  "keywords": [
+    "file_manager",
+    "file-hive"
+  ],
+  "author": "nasim helal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nasimhelal-cell/metro-link/issues"
+  },
+  "homepage": "https://github.com/nasimhelal-cell/metro-link#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
+    "mongoose": "^8.5.1",
+    "morgan": "^1.10.0",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "babel-plugin-root-import": "^6.6.0",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.4",
+    "supertest": "^7.0.0"
+  },
+  "_moduleAliases": {
+    "@": "src"
+  }
+}

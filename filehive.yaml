@@ -1,0 +1,1176 @@
+openapi: 3.0.0
+info:
+  title: file-hive-api
+  description: The API for the file management project
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000/api
+    description: File Hive API
+paths:
+  /v1/auth/register:
+    post:
+      tags:
+        - Auth
+      description: Endpoint for user registration.
+      operationId: User-register
+      requestBody:
+        $ref: "#/components/requestBodies/User"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_201"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_400"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+  /v1/auth/login:
+    post:
+      tags:
+        - Auth
+      description: Endpoint for user login.
+      operationId: User-login
+      requestBody:
+        description: Provide necessary credentials
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/auth_login_body"
+      responses:
+        "200":
+          description: Login successfull
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_401"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+  /v1/auth/logout:
+    post:
+      tags:
+        - Auth
+      description: Endpoint for user logout.
+      operationId: User-logout
+      responses:
+        "200":
+          description: Logout successfull
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_1"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_401"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/folders/create:
+    post:
+      tags:
+        - Folder
+      description: Endpoint to create a new folder.
+      operationId: create-folder
+      requestBody:
+        description: Have to provide neccessary credentials
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/folders_create_body"
+      responses:
+        "201":
+          description: Folder Created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_201_1"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_400"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/folders/rename/{folderID}:
+    patch:
+      tags:
+        - Folder
+      description: Endpoint to rename an existing folder.
+      operationId: rename-folder
+      parameters:
+        - name: folderID
+          in: path
+          description: folder-id (must have to valid in mongoose)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 66815a94e25007f4e4513097
+      requestBody:
+        description: Have to provide neccessary credentials
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/update_folderID_body"
+      responses:
+        "200":
+          description: Folder updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_2"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_404"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/folders/delete/{folderID}:
+    delete:
+      tags:
+        - Folder
+      description: "Endpoint to delete an existing folder and also child folders, files"
+      operationId: delete-folder
+      parameters:
+        - name: folderID
+          in: path
+          description: folder-id (must have to valid in mongoose)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 66815a94e25007f4e4513097
+      responses:
+        "200":
+          description: Folder deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_3"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_404"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/folders/undo/{folderID}:
+    post:
+      tags:
+        - Folder
+      description: Endpoint to undo the last operation on a specific folder
+      operationId: undo-folder
+      parameters:
+        - name: folderID
+          in: path
+          description: folder-id (must have to valid in mongoose)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 66815a94e25007f4e4513097
+      responses:
+        "200":
+          description: Folder operation undone successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_4"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_404"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/folders/{folderID}:
+    get:
+      tags:
+        - Folder
+      description: Endpoint to retrive details of a specific folder
+      operationId: get-folder
+      parameters:
+        - name: folderID
+          in: path
+          description: folder-id (must have to valid in mongoose)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 66815a94e25007f4e4513097
+      responses:
+        "200":
+          description: Folder details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_5"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_404"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/folders/all/{folderID}:
+    get:
+      tags:
+        - Folder
+      description: Endpoint to retrive details of a specific folder
+      operationId: get-folders
+      parameters:
+        - name: folderID
+          in: path
+          description: folder-id (must have to valid in mongoose)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 66815a94e25007f4e4513097
+      responses:
+        "200":
+          description: Folder details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_10"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_404"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/files/upload:
+    post:
+      tags:
+        - File
+      description: Endpoint for uploading file
+      operationId: upload-file
+      requestBody:
+        description: Select the upload file
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/files_upload_body"
+      responses:
+        "200":
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_6"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_400"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/files/view/{fileID}:
+    get:
+      tags:
+        - File
+      description: Endpoint to view a specific file
+      operationId: view-file
+      parameters:
+        - name: fileID
+          in: path
+          description: file-id (must have to valid in mongoose)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 66815a94e25007f4e4513097
+      responses:
+        "200":
+          description: File viewed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_7"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_404"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/files/delete/{fileID}:
+    delete:
+      tags:
+        - File
+      description: Endpoint to delete a specific file and also have to delete associated comments and annotations
+      operationId: delete-file
+      parameters:
+        - name: fileID
+          in: path
+          description: file-id (must have to valid in mongoose)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 66815a94e25007f4e4513097
+      responses:
+        "200":
+          description: File deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_8"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_404"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/files/undo/{fileID}:
+    post:
+      tags:
+        - File
+      description: Endpoint to view a specific file
+      operationId: undo-file
+      parameters:
+        - name: fileID
+          in: path
+          description: file-id (must have to valid in mongoose)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 66815a94e25007f4e4513097
+      responses:
+        "200":
+          description: File operation undone successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_9"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_404"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+  /v1/files/download/{fileID}:
+    get:
+      tags:
+        - File
+      description: Endpoint to download a specific file
+      operationId: download-file
+      parameters:
+        - name: fileID
+          in: path
+          description: file-id (must have to valid in mongoose)
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: 66815a94e25007f4e4513097
+      responses:
+        "200":
+          description: File operation undone successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_9"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_404"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_500"
+      security:
+        - BearerAuth: []
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          example: Nasim Helal
+        email:
+          type: string
+          example: nasimhelal123@gmail.com
+        avatar:
+          type: string
+          format: url
+          example: https://s3.aws.avatar.webp
+        role:
+          type: string
+          default: viewer
+          enum:
+            - viewer
+            - editor
+            - admin
+    Folder:
+      type: object
+      properties:
+        userID:
+          $ref: "#/components/schemas/ID"
+        name:
+          type: string
+          example: FolderName
+        parentFolderID:
+          $ref: "#/components/schemas/ID"
+        path:
+          type: string
+          format: url
+          example: /root/foldername/foldername
+    File:
+      type: object
+      properties:
+        userID:
+          $ref: "#/components/schemas/ID"
+        folderID:
+          $ref: "#/components/schemas/ID"
+        name:
+          type: string
+          example: FileName
+        type:
+          type: string
+          example: txt
+        size:
+          type: number
+          example: 1024
+        link:
+          type: string
+          format: url
+          example: https://s3.aws/filehive/filename.ext
+    Comment:
+      type: object
+      properties:
+        userID:
+          $ref: "#/components/schemas/ID"
+        fileID:
+          $ref: "#/components/schemas/ID"
+        content:
+          type: string
+          example: actual comment
+    Annotation:
+      type: object
+      properties:
+        userID:
+          $ref: "#/components/schemas/ID"
+        fileID:
+          $ref: "#/components/schemas/ID"
+        content:
+          type: string
+          example: actual annotation
+        position:
+          type: string
+          example: position
+    ID:
+      type: string
+      example: 66815a94e25007f4e4513097
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    ObjID:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 66815a94e25007f4e4513097
+    Timestamp:
+      required:
+        - createdAt
+        - updatedAt
+      type: object
+      properties:
+        createdAt:
+          type: string
+          example: 2024-07-04T15:34:10.155+00:00
+        updatedAt:
+          type: string
+          example: 2024-07-04T15:34:10.155+00:00
+    Pagination:
+      required:
+        - limit
+        - page
+        - totalItems
+        - totalPages
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          example: 2
+        limit:
+          type: integer
+          format: int32
+          example: 10
+        prev:
+          type: integer
+          format: int32
+          example: 1
+        next:
+          type: integer
+          format: int32
+          example: 3
+        totalPages:
+          type: integer
+          format: int32
+          example: 5
+        totalItems:
+          type: integer
+          format: int32
+          example: 50
+    PaginationLinks:
+      type: object
+      properties:
+        self:
+          type: string
+          example: /baseUrl?page=2&limit=10
+        prev:
+          type: string
+          example: /baseUrl?page=1&limit=10
+        next:
+          type: string
+          example: /baseUrl?page=3&limit=10
+    inline_response_201:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 201
+        message:
+          type: string
+          example: User registered successfully
+        data:
+          allOf:
+            - $ref: "#/components/schemas/ObjID"
+            - $ref: "#/components/schemas/User"
+            - $ref: "#/components/schemas/Timestamp"
+    inline_response_400:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: Invalid data type or missing data for parameter or request body
+    inline_response_500:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 500
+        error:
+          type: string
+          example: Internal Server Error
+        message:
+          type: string
+          example: Unexpected server error. Please try again sometimes later.
+    auth_login_body:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          example: filehive@gmail.com
+        password:
+          type: string
+          example: filehive123
+    inline_response_200:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Login successfull
+        data:
+          $ref: "#/components/schemas/Token"
+    inline_response_401:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 401
+        error:
+          type: string
+          example: Unauthorized
+        message:
+          type: string
+          example: Authentication required. Need to login
+    inline_response_200_1:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Logout successfull
+    folders_create_body:
+      required:
+        - name
+        - path
+      type: object
+      properties:
+        name:
+          type: string
+          example: foldername
+        parentID:
+          $ref: "#/components/schemas/ID"
+        path:
+          type: string
+          example: /
+    inline_response_201_1:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 201
+        message:
+          type: string
+          example: Folder Created successfully
+        data:
+          allOf:
+            - $ref: "#/components/schemas/ObjID"
+            - $ref: "#/components/schemas/Folder"
+            - $ref: "#/components/schemas/Timestamp"
+    update_folderID_body:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: foldername
+    inline_response_200_2:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 201
+        message:
+          type: string
+          example: Folder updated successfully
+        data:
+          allOf:
+            - $ref: "#/components/schemas/ObjID"
+            - $ref: "#/components/schemas/Folder"
+            - $ref: "#/components/schemas/Timestamp"
+    inline_response_404:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 404
+        error:
+          type: string
+          example: Not Found
+        message:
+          type: string
+          example: The requested resource was not found.
+    inline_response_200_3:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Folder delete successfully
+    inline_response_200_4:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Folder operation undone successfully
+    inline_response_200_5:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Folder details retrieved successfully
+        data:
+          allOf:
+            - $ref: "#/components/schemas/ObjID"
+            - $ref: "#/components/schemas/Folder"
+            - type: object
+              properties:
+                folders:
+                  type: array
+                  items:
+                    allOf:
+                      - $ref: "#/components/schemas/ObjID"
+                      - $ref: "#/components/schemas/Folder"
+            - type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    allOf:
+                      - $ref: "#/components/schemas/ObjID"
+                      - $ref: "#/components/schemas/File"
+            - $ref: "#/components/schemas/Timestamp"
+    files_upload_body:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+    inline_response_200_6:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: File uploaded successfully
+        data:
+          allOf:
+            - $ref: "#/components/schemas/ObjID"
+            - $ref: "#/components/schemas/File"
+            - $ref: "#/components/schemas/Timestamp"
+    inline_response_200_7:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: File viewed successfully
+        data:
+          allOf:
+            - $ref: "#/components/schemas/ObjID"
+            - $ref: "#/components/schemas/File"
+            - $ref: "#/components/schemas/Timestamp"
+        links:
+          $ref: "#/components/schemas/inline_response_200_7_links"
+    inline_response_200_8:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: File deleted successfully
+    inline_response_200_9:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: File operation undone successfully
+        data:
+          allOf:
+            - $ref: "#/components/schemas/ObjID"
+            - $ref: "#/components/schemas/File"
+            - $ref: "#/components/schemas/Timestamp"
+        links:
+          $ref: "#/components/schemas/inline_response_200_7_links"
+    inline_response_200_7_links:
+      type: object
+      properties:
+        comments:
+          type: string
+          example: "/api/v1/comments/{fileID}"
+        annotations:
+          type: string
+          example: "/api/v1/annotations/{fileID}"
+    inline_response_200_10:
+      type: object
+      properties:
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Folders are retrieved successfully
+        data:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Folder"
+              - $ref: "#/components/schemas/ObjID"
+  responses:
+    "204":
+      description: resourses delete successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 204
+              message:
+                type: string
+                example: resourses delete successfully
+    "400":
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/inline_response_400"
+    "400D":
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+              message:
+                type: string
+                example: Invalid data type or missing data for parameter or request body
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: title
+                    issue:
+                      type: string
+                      example: Title is required and must be a string
+    "401":
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/inline_response_401"
+    "403":
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 403
+              error:
+                type: string
+                example: Forbidden
+              message:
+                type: string
+                example: You do not have permission to create an article
+    "404":
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/inline_response_404"
+    "500":
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/inline_response_500"
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      description: current page number
+      required: true
+      style: form
+      explode: true
+      schema:
+        type: integer
+        format: int32
+        example: 1
+    limitParam:
+      name: limit
+      in: query
+      description: maximum items needs to return
+      required: true
+      style: form
+      explode: true
+      schema:
+        type: integer
+        format: int32
+        example: 5
+    sortByParam:
+      name: sort_by
+      in: query
+      description: sort key
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: updatedAt
+    sortTypeParam:
+      name: sort_type
+      in: query
+      description: sort by (default asc)
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: asc
+        enum:
+          - asc
+          - dsc
+    searchParam:
+      name: search
+      in: query
+      description: search
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: title
+    idPathParam:
+      name: id
+      in: path
+      description: object id (must have to valid also)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 66815a94e25007f4e4513097
+    folderIDPathParam:
+      name: folderID
+      in: path
+      description: folder-id (must have to valid in mongoose)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 66815a94e25007f4e4513097
+    fileIDPathParam:
+      name: fileID
+      in: path
+      description: file-id (must have to valid in mongoose)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 66815a94e25007f4e4513097
+    user_idPathParam:
+      name: userId
+      in: path
+      description: object id (must have to valid also)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 66815a94e25007f4e4513097
+    folder_idPathParam:
+      name: folderId
+      in: path
+      description: object id (must have to valid also)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 66815a94e25007f4e4513097
+    file_idPathParam:
+      name: fileId
+      in: path
+      description: object id (must have to valid also)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 66815a94e25007f4e4513097
+    comment_idPathParam:
+      name: commentId
+      in: path
+      description: object id (must have to valid also)
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 66815a94e25007f4e4513097
+  requestBodies:
+    User:
+      description: Have to provide necessary credentials
+      content:
+        application/json:
+          schema:
+            required:
+              - email
+              - name
+              - password
+            type: object
+            properties:
+              username:
+                type: string
+                example: Nasim Helal
+              email:
+                type: string
+                example: nasimhelal123@gmail.com
+              password:
+                type: string
+                example: password
+              avatar:
+                type: string
+                format: url
+                example: https://s3.aws.avatar.webp
+              role:
+                type: string
+                default: viewer
+                enum:
+                  - viewer
+                  - editor
+                  - admin
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
