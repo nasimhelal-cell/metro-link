@@ -11,8 +11,6 @@ router.route("/v1/auth/register").post(authControllers.register);
 router.route("/v1/auth/login").post(authControllers.login);
 router.route("/v1/auth/logout").post(authenticate, authControllers.logout);
 
-//completed up
-
 // station
 router
   .route("/v1/stations/create")
@@ -26,7 +24,10 @@ router
 router.route("/v1/trains/create").post(authenticate, trainControllers.create);
 router.route("/v1/trains").get(authenticate, trainControllers.getTrains);
 router
-  .route("/v1/trains/:id/")
+  .route("/v1/trains/create-schedule")
+  .post(authenticate, trainControllers.createTrainSchedule);
+router
+  .route("/v1/trains/:id/update-schedule")
   .patch(authenticate, trainControllers.updateSchedule);
 
 // wallet

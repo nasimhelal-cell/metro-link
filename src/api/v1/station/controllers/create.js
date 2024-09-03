@@ -1,15 +1,16 @@
 const { StatusCodes } = require("http-status-codes");
 const { catchAsync } = require("@/utils");
+const { createStation } = require("../../../../lib/station");
 
 const create = catchAsync(async (req, res) => {
-  const { email, password } = req.body;
+  const { name, location } = req.body;
 
-  //  add logic in here
+  const station = await createStation({ name, location });
 
   const response = {
     code: StatusCodes.OK,
     message: "create successful",
-    data: { token },
+    data: station,
   };
 
   res.status(StatusCodes.OK).json(response);
