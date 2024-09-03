@@ -68,32 +68,4 @@ This project is a backend system for managing train services, stations, user acc
    npm start
    ```
 
-### Project Structure
 
-```plaintext
-train-service-management/
-├── models/
-│   ├── User.js
-│   ├── Station.js
-│   ├── Train.js
-│   ├── Wallet.js
-│   └── Ticket.js
-│   └── index.js
-├── routes/
-│   ├── auth.js
-│   ├── station.js
-│   ├── train.js
-│   ├── wallet.js
-│   └── ticket.js
-├── controllers/
-│   ├── authController.js
-│   ├── stationController.js
-│   ├── trainController.js
-│   ├── walletController.js
-│   └── ticketController.js
-├── middlewares/
-│   ├── authMiddleware.js
-├── .env
-├── server.js
-└── package.json
-```
